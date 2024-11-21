@@ -56,7 +56,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_methods=["*"],
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )   
@@ -75,13 +75,13 @@ def creats_order(dto : Annotated[Order, Form()]):
     repo.append(dto)
     
 @app.post("/update")
-def update_order(dto : Annotated[UpdateOrderDto, Form()]):
+def update_order(dto: Annotated[UpdateOrderDto, Form()]):
     global message
     for o in repo:
         if o.number == dto.number:
             if dto.status != o.status and dto.status != "":
                 o.status = dto.status
-                message += "Статус заявки №{o.number} изменен"
+                message += f"Статус заявки №{o.number} изменен"
             if dto.description != "":
                 o.description = dto.description
             if dto.master != "":

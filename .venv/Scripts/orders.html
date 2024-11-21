@@ -16,20 +16,46 @@
             <th>Тип неисправности</th>
             <th>Описание проблемы</th>
             <th>Клиент, который подал заявку</th>
-            <th>Номер заявки</th>
             <th>Статус заявки</th>
             <th>Мастер</th>
         </tr>
     </table>
     <script>
         let table = document.querySelector("table");
-        GetOrders();
-        async function GetOrders() {
-            let orders = await fetch("http://127.0.0.1:8000/orders").then(data => data.json());
-            console.log(orders)
 
+        GetOrders();
+
+        async function GetOrders() {
+            let response = await fetch("http://127.0.0.1:8000/orders").then(data => data.json());
+
+            if (response.message)
+                alert(response.message);
+
+
+            // Проверяем, если в ответе есть ключ 'repo'
+            let orders = response.repo || response;
+            orders.forEach(o => {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${o.number}</td>
+                    <td>${o.startDate}</td>
+                    <td>${o.device}</td>
+                    <td>${o.problemType}</td>
+                    <td>${o.description}</td>
+                    <td>${o.client}</td>
+                    <td>${o.status}</td>
+                    <td>${o.master}</td>
+                `;
+                table.append(tr);
+            });
         }
     </script>
+    <style>
+        th,
+        td {
+            border: 1px solid black;
+        }
+    </style>
 </body>
 
 </html>
