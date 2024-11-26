@@ -11,7 +11,9 @@
     <a href="create.html">Создание заявки</a>
     <a href="orders.html">Список заявок</a>
     <a href="update.html">Обновление заявки</a>
-    <form action="http://localhost:8000/orders" method="post">
+    <iframe name="frame" style="display: none;"></iframe>
+    <form target="frame" action="http://localhost:8000/orders" method="post">
+
         <input required placeholder="Номер заявки" type="number" name="number" />
         <input required placeholder="Дата начала" type="date" name="startDate" />
         <input required placeholder="Устройство" type="text" name="device" />
