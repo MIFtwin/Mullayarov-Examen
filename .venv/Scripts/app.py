@@ -69,8 +69,8 @@ def get_orders(param = None):
     buffer = message
     message = ""
     if(param):
-        return {"repo": [o for o in repo if o.number == int(param)], "message": message}
-    return {"repo": repo, "message": message}
+        return {"repo": [o for o in repo if o.number == int(param)], "message": buffer}
+    return {"repo": repo, "message": buffer}
 
 @app.post("/orders")
 def creats_order(dto : Annotated[Order, Form()]):
