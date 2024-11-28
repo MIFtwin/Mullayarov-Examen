@@ -3,6 +3,7 @@ from typing import Annotated, Optional
 from pydantic import BaseModel
 from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Annotated, Optional, List
 
 class Order(BaseModel):
     number: int
@@ -13,13 +14,14 @@ class Order(BaseModel):
     client: str
     status: str
     master : Optional[str] = "Не назначен"
+    comments : Optional[List[str]] = []
     
 class UpdateOrderDto(BaseModel):
     number: int
     status: Optional[str] = ""
     description: Optional[str] = ""
     master: Optional[str] = "" 
-      
+    comment : Optional[str] = str
 
 repo = [
     Order(
@@ -84,9 +86,14 @@ def update_order(dto: Annotated[UpdateOrderDto, Form()]):
             if dto.status != o.status and dto.status != "":
                 o.status = dto.status
                 message += f"Статус заявки №{o.number} изменен\n"
+                if(o.status == "выполнено"):
+                  message += f"Заявка №{o.number} завершена\n"  
             if dto.description != "":
                 o.description = dto.description
             if dto.master != "":
                 o.master = dto.master
+                if dto.comment and dto.comment != "":
+                    o.comments.append(dto.comment)
+
             return o
     return "Не найдено"
