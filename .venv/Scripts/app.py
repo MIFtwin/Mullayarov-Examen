@@ -99,10 +99,8 @@ def update_order(dto: Annotated[UpdateOrderDto, Form()]):
 
             return o
     return "Не найдено"
-def complete_count():
-    a = [o for o in repo if o.status == "выполнено"]
-    return len(a)
-
+def complete_count(): 
+    return len([o for o in repo if o.status == "выполнено"])
 def get_problem_type_stat():
     dict = {}
     for o in repo:
@@ -113,8 +111,8 @@ def get_problem_type_stat():
     return dict
 def get_average_time_to_complete():
     times = [(
-        datetime.datetime(o.endDate.year, o.endDate.month, o.endDate.day) -
-        datetime.datetime(o.startDate.year, o.startDate.month, o.startDate.day)).days 
+        datetime.datetime.fromisoformat(o.endDate.isoformat()) - 
+        datetime.datetime.fromisoformat(o.startDate.isoformat())).days 
                  for o in repo 
                  if o.status == "выполнено"]
     if complete_count() != 0:

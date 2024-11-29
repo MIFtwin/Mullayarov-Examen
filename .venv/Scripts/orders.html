@@ -11,6 +11,7 @@
     <a href="create.html">Создание заявки</a>
     <a href="orders.html">Список заявок</a>
     <a href="update.html">Обновление заявки</a>
+    <a href="stat.html">Статистика</a>
     <div>
         <input id="search" placehonder="Номер" />
         <button onclick="GetFilter()">Найти</button>
@@ -27,6 +28,7 @@
                 <th>Клиент, который подал заявку</th>
                 <th>Статус заявки</th>
                 <th>Мастер</th>
+                <th>Комментарии</th>
             </tr>
         </thead>
         <tbody>
@@ -60,6 +62,7 @@
                     <td>${o.client}</td>
                     <td>${o.status}</td>
                     <td>${o.master}</td>
+                    <td>${o.comments.join(", ")}</td>
                 `;
                 tbady.append(tr);
             });
