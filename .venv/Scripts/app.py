@@ -8,6 +8,7 @@ from typing import Annotated, Optional, List
 class Order(BaseModel):
     number: int
     startDate: datetime.date
+    endDate: Optional[datetime.date] = None
     device: str
     problemType: str
     description: str
@@ -87,7 +88,8 @@ def update_order(dto: Annotated[UpdateOrderDto, Form()]):
                 o.status = dto.status
                 message += f"Статус заявки №{o.number} изменен\n"
                 if(o.status == "выполнено"):
-                  message += f"Заявка №{o.number} завершена\n"  
+                  message += f"Заявка №{o.number} завершена\n" 
+                  o.endDate = datetime.datetime.now() 
             if dto.description != "":
                 o.description = dto.description
             if dto.master != "":
@@ -97,3 +99,31 @@ def update_order(dto: Annotated[UpdateOrderDto, Form()]):
 
             return o
     return "Не найдено"
+def complete_count():
+    a = [o for o in repo if o.status == "выполнено"]
+    return len(a)
+
+def get_problem_type_stat():
+    dict = {}
+    for o in repo:
+        if o.problemType in dict.keys():
+            dict[o.problemType] += 1
+        else:
+            dict[o.problemType] = 1
+    return dict
+def get_average_time_to_complete():
+    times = [(
+        datetime.datetime(o.endDate.year, o.endDate.month, o.endDate.day) -
+        datetime.datetime(o.startDate.year, o.startDate.month, o.startDate.day)).days 
+                 for o in repo 
+                 if o.status == "выполнено"]
+    if complete_count() != 0:
+        return sum(times) / complete_count()
+    else:
+        return 0
+@app.get("/statistics")
+def get_statistics():
+    return {
+        "complete_count" : complete_count(),
+        "problem_type_stat" : get_problem_type_stat(),
+        "average_time_to_complete" : get_average_time_to_complete()}    
