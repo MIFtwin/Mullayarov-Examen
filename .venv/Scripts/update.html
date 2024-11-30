@@ -28,5 +28,10 @@
         <input type="submit" value="Обновление" />
     </form>
 </body>
+<script>
+    if (!sessionStorage.getItem("token")) {
+        window.location.href = "auth.html";
+    }
+</script>
 
 </html>
